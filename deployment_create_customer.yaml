@@ -1,0 +1,37 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: createcustomer
+spec:
+  replicas: 2
+  selector:
+    # This must match the labels we set on the pod!
+    matchLabels:
+      app: createcustomer
+  # This template field is a regular pod configuration 
+  # nested inside the deployment spec
+  template:
+    metadata:
+      # Set labels on the pod.
+      # This is used in the deployment selector.
+      labels:
+        app: createcustomer
+    spec:
+      containers:
+        - name: createcustomer
+          image: <your docker image>
+          ports: 
+          - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: createcustomer-service
+spec:
+  selector:
+    app: createcustomer
+  ports:
+  - protocol: "TCP"
+    port: 5002
+    targetPort: 5000
+  type: LoadBalancer
